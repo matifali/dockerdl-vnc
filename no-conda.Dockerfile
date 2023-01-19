@@ -40,6 +40,26 @@ RUN wget -O- https://aka.ms/install-vscode-server/setup.sh | sh
 # Expose port 8000 for code-server
 EXPOSE 8000
 
+# Install a VNC server and noVNC
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    x11vnc \
+    novnc \
+    websockify && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Expose port 6080 for noVNC
+EXPOSE 6080
+
+# Install a window manager
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xfce4 \
+    xfce4-terminal && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Add a user `${USERNAME}` so that you're not developing as the `root` user
 RUN groupadd -g ${GROUPID} ${USERNAME} && \
     useradd ${USERNAME} \
@@ -81,3 +101,8 @@ RUN pip install --upgrade --no-cache-dir pip setuptools wheel && \
     # Set path of python packages
     echo "# Set path of python packages" >>/home/${USERNAME}/.bashrc && \
     echo 'export PATH=$HOME/.local/bin:$PATH' >>/home/${USERNAME}/.bashrc
+
+# Start vnc and noVNC server
+CMD ["bash", "-c", "mkdir -p ~/.vnc && x11vnc -storepasswd password ~/.vnc/passwd && \
+    websockify -D --web=/usr/share/novnc/ 6080 localhost:5900 && \
+    xfce4-session"]
