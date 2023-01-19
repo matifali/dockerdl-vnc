@@ -1,5 +1,5 @@
 # Build argumnets
-ARG CUDA_VER=11.7.1
+ARG CUDA_VER=11.8.0
 ARG UBUNTU_VER=22.04
 # Download the base image
 FROM nvidia/cuda:${CUDA_VER}-cudnn8-runtime-ubuntu${UBUNTU_VER}
@@ -46,6 +46,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN wget -O- https://aka.ms/install-vscode-server/setup.sh | sh
 # Expose port 8000 for code-server
 EXPOSE 8000
+
+
+# Install a VNC server and noVNC
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    x11vnc \
+    novnc \
+    websockify && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Expose port 6080 for noVNC
+EXPOSE 6080
+
+# Install a window manager
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xfce4 \
+    xfce4-terminal && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install miniconda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \

@@ -7,14 +7,13 @@ name: Docker Build
 
 on:
   schedule:
-    # Runs at 00:10 am every Monday
-    - cron: "10 0 * * 1"
+    # Runs at 01:10 am every Monday
+    - cron: "10 1 * * 1"
   push:
     branches: ["main"]
     paths-ignore:
       - "**.md"
-    # Publish semver tags as releases.
-    tags: ["v*.*.*"]
+
   pull_request:
     branches: ["main"]
     paths-ignore:
@@ -49,14 +48,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: "v1.13.1"
-
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
 
@@ -64,16 +55,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          # list of Docker images to use as base name for tags
           images: |
-            matifali/dockerdl
-          # ghcr.io/matifali/dockerdl
-          # generate Docker tags based on the matrix values also add latest tag if matrix.tag == 'no-conda'
+            matifali/dockerdl-vnc
+
           tags: |
             type=raw,value=${{ matrix.tag }}
             type=raw,value=latest,enable=${{ matrix.tag == 'no-conda' }}
 
-          # create labels for the image
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -83,16 +71,6 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
             org.opencontainers.image.authors=${{ github.event.repository.owner.login }}
-
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      # - name: Log into registry ghcr.io
-      #   if: github.event_name != 'pull_request'
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       # Login to DockerHub
       - name: Login to DockerHub
@@ -115,37 +93,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      # # Add latest tag to no-conda image
-      # - name: Add latest tag to no-conda image
-      #   if: github.event_name != 'pull_request' && matrix.tag == 'no-conda'
-      #   run: |
-      #     docker pull matifali/dockerdl:no-conda
-      #     docker tag matifali/dockerdl:no-conda matifali/dockerdl:latest
-      #     docker push matifali/dockerdl:latest
-      #     docker pull ghcr.io/matifali/dockerdl:no-conda
-      #     docker tag ghcr.io/matifali/dockerdl:no-conda ghcr.io/matifali/dockerdl:latest
-      #     docker push ghcr.io/matifali/dockerdl:latest
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: |
-          cosign sign \
-          matifali/dockerdl:${{ matrix.tag }}
-
-      - name: Verify the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        run: |
-          cosign verify \
-          matifali/dockerdl:${{ matrix.tag }}

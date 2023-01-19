@@ -1,6 +1,6 @@
-# DockerDL [![Docker Build](https://github.com/matifali/dockerdl/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/matifali/dockerdl/actions/workflows/docker-publish.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/matifali/dockerdl) <a href='https://hub.docker.com/r/matifali/dockerdl' target="_blank"><img alt='DockerHub' src='https://img.shields.io/badge/DockerHub-100000?logoColor=0000FF&labelColor=0000FF&color=0000FF'/></a>
+# DockerDL-VNC [![Docker Build](https://github.com/matifali/dockerdl/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/matifali/dockerdl/actions/workflows/docker-publish.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/matifali/dockerdl) <a href='https://hub.docker.com/r/matifali/dockerdl' target="_blank"><img alt='DockerHub' src='https://img.shields.io/badge/DockerHub-100000?logoColor=0000FF&labelColor=0000FF&color=0000FF'/></a>
 
-## Deep Learning Docker Image
+## Deep Learning Docker Image with noVNC
 
 Don't waste time on setting up a deep learning environment while you can get a deep learning environment with everything pre-installed.
 
@@ -23,13 +23,13 @@ Don't waste time on setting up a deep learning environment while you can get a d
 
 | Variant    | Tag          | Conda              | PyTorch            | TensorFlow         | Image size |
 | ---------- | ------------ | ------------------ | ------------------ | ------------------ | ---------- |
-| Conda      | `conda`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl/conda?style=for-the-badge&label=) |
-| No Conda   | `no-conda`, `latest`  | :x:                | :heavy_check_mark: | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl/no-conda?style=for-the-badge&label=) |
-| PyTorch    | `pytorch`    | :x:                | :heavy_check_mark: | :x:                | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl/pytorch?style=for-the-badge&label=) |
-| PyTorch (Nightly) | `pytorch-nightly` | :x:                | :heavy_check_mark: | :x:                | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl/pytorch-nightly?style=for-the-badge&label=) |
-| Tensorflow | `tensorflow` | :x:                | :x:                | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl/tensorflow?style=for-the-badge&label=) |
+| Conda      | `conda`      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl-vnc/conda?style=for-the-badge&label=) |
+| No Conda   | `no-conda`, `latest`  | :x:                | :heavy_check_mark: | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl-vnc/no-conda?style=for-the-badge&label=) |
+| PyTorch    | `pytorch`    | :x:                | :heavy_check_mark: | :x:                | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl-vnc/pytorch?style=for-the-badge&label=) |
+| PyTorch (Nightly) | `pytorch-nightly` | :x:                | :heavy_check_mark: | :x:                | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl-vnc/pytorch-nightly?style=for-the-badge&label=) |
+| Tensorflow | `tensorflow` | :x:                | :x:                | :heavy_check_mark: | ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/matifali/dockerdl-vnc/tensorflow?style=for-the-badge&label=) |
 
-You can see the full list of tags [https://hub.docker.com/r/matifali/dockerdl/tags](https://hub.docker.com/r/matifali/dockerdl/tags?page=1&ordering=last_updated).
+You can see the full list of tags [https://hub.docker.com/r/matifali/dockerdl-vnc/tags](https://hub.docker.com/r/matifali/dockerdl-vnc/tags?page=1&ordering=last_updated).
 
 ## Requirements
 
@@ -40,13 +40,13 @@ You can see the full list of tags [https://hub.docker.com/r/matifali/dockerdl/ta
 ## Fast Start
 
 ```console
-docker run --gpus all --rm -it -h dockerdl matifali/dockerdl bash
+docker run --gpus all --rm -it -h dockerdl matifali/dockerdl-vnc bash
 ```
 
 ### Launch a vscode server
 
 ```console
-docker run --gpus all --rm -it -h dockerdl -p 8000:8000 matifali/dockerdl code-server --accept-server-license-terms serve-local --without-connection-token --quality stable --telemetry-level off
+docker run --gpus all --rm -it -h dockerdl -p 8000:8000 matifali/dockerdl-vnc code-server --accept-server-license-terms serve-local --without-connection-token --quality stable --telemetry-level off
 ```
 
 Connect to the server using your browser at [http://localhost:8000](http://localhost:8000).
@@ -54,13 +54,13 @@ Connect to the server using your browser at [http://localhost:8000](http://local
 ### Launch a Jupyter notebook server
 
 ```console
-docker run --gpus all --rm -it -h dockerdl -p 8888:8888 matifali/dockerdl jupyter notebook --no-browser --port 8888 --NotebookApp.token='' --ip='*'
+docker run --gpus all --rm -it -h dockerdl -p 8888:8888 matifali/dockerdl-vnc jupyter notebook --no-browser --port 8888 --NotebookApp.token='' --ip='*'
 ```
 
 ### JupyterLab server without conda
 
 ```console
-docker run --gpus all --rm -it -h dockerdl -p 8888:8888 matifali/dockerdl jupyter lab --no-browser --port 8888 --ServerApp.token='' --ip='*'
+docker run --gpus all --rm -it -h dockerdl -p 8888:8888 matifali/dockerdl-vnc jupyter lab --no-browser --port 8888 --ServerApp.token='' --ip='*'
 ```
 
 Connect by opening <http://localhost:8888> in your browser.
@@ -70,7 +70,7 @@ Connect by opening <http://localhost:8888> in your browser.
 ### Clone the repo
 
 ```console
-git clone https://github.com/matifali/dockerdl.git
+git clone https://github.com/matifali/dockerdl-vnc.git
 ```
 
 ### Add or delete packages
@@ -98,7 +98,7 @@ Following `--build-arg` are available:
 Build an image with default settings and your own username and user id.
 
 ```console
-docker build -t dockerdl:latest /
+docker build -t dockerdl-vnc:latest /
 --build-arg USERNAME=$USER /
 --build-arg USERID=$(id -u $USER) /
 --build-arg GROUPID=$(id -g $USER) /
@@ -110,7 +110,7 @@ docker build -t dockerdl:latest /
 Build an image with Python 3.8, TensorFlow 2.6.0, CUDA 11.5.0, Ubuntu 20.04 and no:conda
 
 ```console
-docker build -t dockerdl:latest /
+docker build -t dockerdl-vnc:latest /
 --build-arg USERNAME=$USER /
 --build-arg USERID=$(id -u $USER) /
 --build-arg GROUPID=$(id -g $USER) /
@@ -137,12 +137,11 @@ Follow the instructions [here](https://www.jetbrains.com/help/pycharm/docker.htm
 
 ## Issues
 
-If you find any issue please feel free to create an [issue](https://github.com/matifali/dockerdL/issues/new/choose) and submit a PR.
+If you find any issue please feel free to create an [issue](https://github.com/matifali/dockerdl-vnc/issues/new/choose) and submit a PR.
 
 ## Support
 
 - Please give a star (⭐) if using this has helped you.
-- Help the flood victims in Pakistan by donating [here](https://alkhidmat.org/).
 
 ## References
 

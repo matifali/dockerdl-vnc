@@ -1,5 +1,5 @@
 # Build argumnets
-ARG CUDA_VER=11.7.1
+ARG CUDA_VER=11.8.0
 ARG UBUNTU_VER=22.04
 # Download the base image
 FROM nvidia/cuda:${CUDA_VER}-cudnn8-runtime-ubuntu${UBUNTU_VER}
@@ -53,9 +53,7 @@ RUN groupadd -g ${GROUPID} ${USERNAME} && \
 USER ${USERNAME}
 # Chnage Workdir
 WORKDIR /home/${USERNAME}
-# Tensorflow Package version passed as build argument e.g. --build-arg TF_VERSION=2.9.2
-# A blank value will install the latest version
-ARG TF_VERSION=
+
 # Install packages inside the new environment
 RUN pip install --upgrade --no-cache-dir pip setuptools wheel && \
     pip install --upgrade --no-cache-dir torch torchvision torchaudio torchtext torchserve lightning && \
